@@ -4,6 +4,7 @@ const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const { v4: uuidv4 } = require('uuid');
 const { CosmosClient } = require('@azure/cosmos');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ function generateUniqueId() {
 async function callGPTAPI(data) {
     const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo-0125',
-        messages: [{ role: 'system', content: `${promptTemplate} Resume data: ${JSON.stringify(data)}` }],
+        messages: [{ role: 'system', content: `${promptTemplate} Resume data: ${data}` }],
     });
     return response.choices[0].message.content.trim();
 }
@@ -49,11 +50,12 @@ async function uploadToCosmosDB(item) {
     await container.items.create(item);
 }
 
-app.storageQueue('storageQueueTrigger', {
-    queueName: 'js-queue-items',
-    connection: '',
-    handler: async (queueItem, context) => {
-        const personData = JSON.parse(message.body);
-        await processPersonData(personData);
+app.serviceBusTopic('serviceBusTopicTrigger', {
+    connection: 'SERVICE_BUS_CONNECTION_STRING',
+    topicName: process.env.SERVICE_BUS_TOPIC_NAME,
+    subscriptionName: process.env.SERVICE_BUS_SUBSCRIPTION_NAME,
+    handler: async (message, context) => {
+        console.log('processing person data...')
+        await processPersonData(message.body);
     }
 });
