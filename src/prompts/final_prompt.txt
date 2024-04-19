@@ -9,16 +9,27 @@ All data must be extracted into the json format provided.
 * naturalLanguages is a list the users's spoken/written languages found in the resume (eg. English, Thai etc.). Language field cannot be null or blank.
 * Do not make up values, only use what is provided in the unstructured data. 
 * All location fields should have "Thailand" as a value, unless specified otherwise in the unstructured data. 
+* If the person is not currently working anywhere, use their experience at index 1 for current position, company, and salary.
+* cn_fname and cn_fname_thai are mutually exclusive, do not include a value for cn_fname_thai if cn_fname has a value and vice versa. 
+* cn_lname and cn_lname_thai are mutually exclusive, do not include a value for cn_fname_thai if cn_fname has a value and vice versa. 
+* Ensure that all date fields (startDate, endDate, years, date_added, etc.) are formatted in YYYY-MM-DD. 
+* last_updated_months value is the number of months it's been since the last update. For example, 3 months ago = 3. 
 
 [fields and values example]
 {
   "extractionFields": {
-    "name": "John Doe",
-    "email": "johndoe@example.com",
-    "phoneNumber": "+1 (123) 456-7890",
-    "address": "123 Main Street",
-    "city": "Anytown",
+    "cn_fname": "Adam",
+    "cn_lname": "Amata",
+    "cn_fname_thai": "",
+    "cn_lname_thai": "",
+    "last_updated_months": "3",
+    "date_added": "2024-04-02,
+    "address": "", 
+    "city": "Bangkok",
     "salary_expectation": "50000",
+    "current_position": "Software Engineer",
+    "current_company": "TechCorp",
+    "current_salary": "50000",
     "experience": [
       {
         "index": 1,
@@ -35,7 +46,8 @@ All data must be extracted into the json format provided.
         "index": 1,
         "degreeAndOrMajor": "Bachelor of Science in Computer Science",
         "university": "University of Tech",
-        "years": "2014-2018",
+        "startDate": "2015-01-01",
+        "endDate": "2016-01-01",
         "gpa": "3.8"
       }
     ],
@@ -56,7 +68,7 @@ All data must be extracted into the json format provided.
         "index": 1,
         "name": "Certified ScrumMaster",
         "organization": "Scrum Alliance",
-        "years": "2020"
+        "years": "2020-01-01"
       }
     ],
     "keywordsAndSkills": {
