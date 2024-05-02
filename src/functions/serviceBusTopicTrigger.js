@@ -36,8 +36,8 @@ async function processPersonData(personData, retryCount = 3) {
     try {
         const uniqueId = generateUniqueId();
         const structuredData = await callGPTAPI(personData);
-        console.log(`structured data: ${structuredData}`);
-        const item = { id: uniqueId, data: JSON.parse(structuredData) };
+        const item = { id: uniqueId, data: JSON.parse(structuredData), imported: false, created: new Date().toISOString(), rawData: personData };
+        console.log(item);
         await uploadToCosmosDB(item);
         console.log('Item added to Cosmos DB successfully');
     } catch (error) {
